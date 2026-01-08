@@ -1,202 +1,193 @@
 """
-Test client for Trading System API
-Run the main app.py first, then run this script to test all endpoints
+Test Client for Trading System API
+Start app.py first, then run:
+python test_client.py
 """
 
 import requests
 import json
-from time import sleep
+import time
 
 BASE_URL = "http://localhost:5000/api/v1"
+TIMEOUT = 5
 
-def print_response(title, response):
-    """Pretty print API response"""
-    print("\n" + "=" * 60)
-    print(f"TEST: {title}")
-    print("=" * 60)
+# UTILITIES
+
+def divider(title=""):
+    print("\n" + "=" * 70)
+    if title:
+        print(f"TEST: {title}")
+        print("=" * 70)
+
+def pretty_print(response):
     print(f"Status Code: {response.status_code}")
-    print(f"Response:")
-    print(json.dumps(response.json(), indent=2))
+    try:
+        print(json.dumps(response.json(), indent=2))
+    except ValueError:
+        print("Invalid JSON response")
+
+def api_request(method, endpoint, payload=None):
+    url = f"{BASE_URL}{endpoint}"
+    try:
+        response = requests.request(
+            method=method,
+            url=url,
+            json=payload,
+            timeout=TIMEOUT
+        )
+        return response
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Request failed: {e}")
+        return None
+
+
+# ======================================================
+# TEST CASES
+# ======================================================
 
 def test_health():
-    """Test health check"""
-    response = requests.get(f"{BASE_URL}/health")
-    print_response("Health Check", response)
-    return response.status_code == 200
+    divider("Health Check")
+    response = api_request("GET", "/health")
+    if response:
+        pretty_print(response)
+        return response.status_code == 200
+    return False
+
 
 def test_get_instruments():
-    """Test fetching instruments"""
-    response = requests.get(f"{BASE_URL}/instruments")
-    print_response("Get All Instruments", response)
-    return response.status_code == 200
+    divider("Fetch Instruments")
+    response = api_request("GET", "/instruments")
+    if response:
+        pretty_print(response)
 
-def test_place_buy_order():
-    """Test placing a buy order"""
-    order_data = {
-        "symbol": "AAPL",
-        "orderType": "BUY",
-        "orderStyle": "MARKET",
-        "quantity": 10
+
+def test_place_order(symbol, order_type, style, quantity, price=None):
+    payload = {
+        "symbol": symbol,
+        "orderType": order_type,
+        "orderStyle": style,
+        "quantity": quantity
     }
-    response = requests.post(f"{BASE_URL}/orders", json=order_data)
-    print_response("Place BUY Order (MARKET)", response)
-    
-    if response.status_code == 201:
-        return response.json()["data"]["order"]["orderId"]
+    if price is not None:
+        payload["price"] = price
+
+    divider(f"Place {order_type} Order ({style}) - {symbol}")
+    response = api_request("POST", "/orders", payload)
+    if response:
+        pretty_print(response)
+        if response.status_code == 201:
+            return response.json()["data"]["order"]["orderId"]
     return None
 
-def test_place_limit_order():
-    """Test placing a limit order"""
-    order_data = {
-        "symbol": "GOOGL",
-        "orderType": "BUY",
-        "orderStyle": "LIMIT",
-        "quantity": 5,
-        "price": 140.00
-    }
-    response = requests.post(f"{BASE_URL}/orders", json=order_data)
-    print_response("Place BUY Order (LIMIT)", response)
-    
-    if response.status_code == 201:
-        return response.json()["data"]["order"]["orderId"]
-    return None
-
-def test_place_sell_order():
-    """Test placing a sell order"""
-    order_data = {
-        "symbol": "AAPL",
-        "orderType": "SELL",
-        "orderStyle": "MARKET",
-        "quantity": 5
-    }
-    response = requests.post(f"{BASE_URL}/orders", json=order_data)
-    print_response("Place SELL Order (MARKET)", response)
-    
-    if response.status_code == 201:
-        return response.json()["data"]["order"]["orderId"]
-    return None
 
 def test_invalid_order():
-    """Test validation - invalid order"""
-    order_data = {
+    divider("Invalid Order - Negative Quantity")
+    payload = {
         "symbol": "AAPL",
         "orderType": "BUY",
         "orderStyle": "MARKET",
-        "quantity": -5  # Invalid: negative quantity
+        "quantity": -10
     }
-    response = requests.post(f"{BASE_URL}/orders", json=order_data)
-    print_response("Invalid Order (Negative Quantity)", response)
+    response = api_request("POST", "/orders", payload)
+    if response:
+        pretty_print(response)
 
-def test_limit_order_without_price():
-    """Test validation - limit order without price"""
-    order_data = {
+
+def test_limit_without_price():
+    divider("Invalid Order - LIMIT without Price")
+    payload = {
         "symbol": "AAPL",
         "orderType": "BUY",
         "orderStyle": "LIMIT",
-        "quantity": 10
-        # Missing price
+        "quantity": 5
     }
-    response = requests.post(f"{BASE_URL}/orders", json=order_data)
-    print_response("Invalid Order (LIMIT without price)", response)
+    response = api_request("POST", "/orders", payload)
+    if response:
+        pretty_print(response)
 
-def test_get_order_status(order_id):
-    """Test fetching order status"""
-    response = requests.get(f"{BASE_URL}/orders/{order_id}")
-    print_response(f"Get Order Status (ID: {order_id})", response)
 
-def test_get_all_orders():
-    """Test fetching all orders"""
-    response = requests.get(f"{BASE_URL}/orders")
-    print_response("Get All Orders", response)
+def test_order_status(order_id):
+    divider(f"Order Status (ID: {order_id})")
+    response = api_request("GET", f"/orders/{order_id}")
+    if response:
+        pretty_print(response)
 
-def test_get_trades():
-    """Test fetching trades"""
-    response = requests.get(f"{BASE_URL}/trades")
-    print_response("Get All Trades", response)
 
-def test_get_portfolio():
-    """Test fetching portfolio"""
-    response = requests.get(f"{BASE_URL}/portfolio")
-    print_response("Get Portfolio", response)
+def test_all_orders():
+    divider("Fetch All Orders")
+    response = api_request("GET", "/orders")
+    if response:
+        pretty_print(response)
 
-def run_all_tests():
-    """Run all test cases"""
-    print("\n" + "#" * 60)
-    print("#" + " " * 58 + "#")
-    print("#" + " " * 15 + "TRADING SYSTEM API TESTS" + " " * 19 + "#")
-    print("#" + " " * 58 + "#")
-    print("#" * 60)
-    
-    try:
-        # 1. Health check
-        if not test_health():
-            print("\n❌ Server is not running. Please start app.py first!")
-            return
-        
-        sleep(0.5)
-        
-        # 2. Get instruments
-        test_get_instruments()
-        sleep(0.5)
-        
-        # 3. Place multiple buy orders
-        order_id_1 = test_place_buy_order()
-        sleep(0.5)
-        
-        order_id_2 = test_place_limit_order()
-        sleep(0.5)
-        
-        # Buy more stocks for testing
-        print("\n--- Buying more stocks for portfolio diversity ---")
-        for symbol in ["MSFT", "TSLA"]:
-            order_data = {
-                "symbol": symbol,
-                "orderType": "BUY",
-                "orderStyle": "MARKET",
-                "quantity": 3
-            }
-            response = requests.post(f"{BASE_URL}/orders", json=order_data)
-            print(f"Bought {symbol}: {response.status_code}")
-            sleep(0.3)
-        
-        # 4. Place sell order
-        order_id_3 = test_place_sell_order()
-        sleep(0.5)
-        
-        # 5. Test validation
-        test_invalid_order()
-        sleep(0.5)
-        
-        test_limit_order_without_price()
-        sleep(0.5)
-        
-        # 6. Get order status
-        if order_id_1:
-            test_get_order_status(order_id_1)
-            sleep(0.5)
-        
-        # 7. Get all orders
-        test_get_all_orders()
-        sleep(0.5)
-        
-        # 8. Get all trades
-        test_get_trades()
-        sleep(0.5)
-        
-        # 9. Get portfolio
-        test_get_portfolio()
-        
-        print("\n" + "#" * 60)
-        print("#" + " " * 58 + "#")
-        print("#" + " " * 20 + "TESTS COMPLETED" + " " * 23 + "#")
-        print("#" + " " * 58 + "#")
-        print("#" * 60)
-        
-    except requests.exceptions.ConnectionError:
-        print("\n❌ ERROR: Cannot connect to the server!")
-        print("Please make sure app.py is running on http://localhost:5000")
-    except Exception as e:
-        print(f"\n❌ ERROR: {str(e)}")
+
+def test_trades():
+    divider("Fetch Trades")
+    response = api_request("GET", "/trades")
+    if response:
+        pretty_print(response)
+
+
+def test_portfolio():
+    divider("Fetch Portfolio")
+    response = api_request("GET", "/portfolio")
+    if response:
+        pretty_print(response)
+
+
+# ======================================================
+# TEST RUNNER
+# ======================================================
+
+def run_tests():
+    print("\n" + "#" * 70)
+    print("#" + " " * 22 + "TRADING SYSTEM API TEST SUITE" + " " * 21 + "#")
+    print("#" * 70)
+
+    if not test_health():
+        print("\n❌ Server is not running. Start app.py first.")
+        return
+
+    time.sleep(0.4)
+
+    test_get_instruments()
+    time.sleep(0.4)
+
+    # BUY Orders
+    buy_order_id = test_place_order("AAPL", "BUY", "MARKET", 10)
+    time.sleep(0.4)
+
+    limit_order_id = test_place_order("GOOGL", "BUY", "LIMIT", 5, price=140.00)
+    time.sleep(0.4)
+
+    # Additional buys
+    print("\n--- Adding Portfolio Diversity ---")
+    for symbol in ["MSFT", "TSLA"]:
+        test_place_order(symbol, "BUY", "MARKET", 3)
+        time.sleep(0.3)
+
+    # SELL Order
+    sell_order_id = test_place_order("AAPL", "SELL", "MARKET", 5)
+    time.sleep(0.4)
+
+    # Validation tests
+    test_invalid_order()
+    time.sleep(0.4)
+
+    test_limit_without_price()
+    time.sleep(0.4)
+
+    # Fetch data
+    if buy_order_id:
+        test_order_status(buy_order_id)
+
+    test_all_orders()
+    test_trades()
+    test_portfolio()
+
+    print("\n" + "#" * 70)
+    print("#" + " " * 27 + "ALL TESTS COMPLETED" + " " * 27 + "#")
+    print("#" * 70)
+
 
 if __name__ == "__main__":
-    run_all_tests()
+    run_tests()
