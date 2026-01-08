@@ -7,6 +7,7 @@ A simplified stock trading platform backend that simulates core trading workflow
 This project implements a wrapper SDK around REST APIs for a trading platform. It allows users to view instruments, place orders, check order status, view trades, and manage their portfolio - all without real market connectivity.
 
 The system simulates:
+
 - Real-time order execution
 - Portfolio management with profit/loss tracking
 - Complete trade history
@@ -17,10 +18,12 @@ The system simulates:
 ## ✨ Features
 
 ### 1. Instrument Management
+
 - View all tradable instruments (stocks)
 - Each instrument includes: symbol, exchange, type, and last traded price
 
 ### 2. Order Management
+
 - **Order Types**: BUY / SELL
 - **Order Styles**: MARKET / LIMIT
 - Place orders with validation
@@ -29,17 +32,20 @@ The system simulates:
 - View all orders
 
 ### 3. Trade History
+
 - View all executed trades
 - Track price, quantity, and timestamp
 - Link trades to original orders
 
 ### 4. Portfolio Management
+
 - Real-time portfolio holdings
 - Average price calculation
 - Current value and profit/loss tracking
 - Percentage-based returns
 
 ### 5. Validation & Error Handling
+
 - Quantity validation (must be > 0)
 - Price validation for LIMIT orders
 - Instrument existence checks
@@ -68,6 +74,7 @@ The system simulates:
 ### Installation Steps
 
 1. **Clone or download the project files**
+
    ```bash
    # Ensure you have these files:
    # - app.py
@@ -76,22 +83,25 @@ The system simulates:
    ```
 
 2. **Create a virtual environment (recommended)**
+
    ```bash
    python -m venv venv
-   
+
    # Activate on Windows
    venv\Scripts\activate
-   
+
    # Activate on macOS/Linux
    source venv/bin/activate
    ```
 
 3. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Run the server**
+
    ```bash
    python app.py
    ```
@@ -108,6 +118,7 @@ The system simulates:
 ## 📚 API Documentation
 
 ### Base URL
+
 ```
 http://localhost:5000/api/v1
 ```
@@ -115,11 +126,13 @@ http://localhost:5000/api/v1
 ### Endpoints
 
 #### 1. Health Check
+
 **GET** `/health`
 
 Check if the API is running.
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -131,44 +144,50 @@ Check if the API is running.
 ---
 
 #### 2. Get All Instruments
+
 **GET** `/instruments`
 
 Fetch list of all tradable instruments.
 
 **Response:**
+
 ```json
 {
   "success": true,
   "data": [
     {
-      "symbol": "AAPL",
+      "symbol": "TCS",
       "exchange": "NASDAQ",
       "instrumentType": "STOCK",
-      "lastTradedPrice": 175.50
+      "lastTradedPrice": 175.5
     }
   ],
   "count": 5
 }
 ```
+
 ---
 
 #### 3. Place Order
+
 **POST** `/orders`
 
 Place a new buy or sell order.
 
 **Request Body:**
+
 ```json
 {
-  "symbol": "AAPL",
+  "symbol": "TCS",
   "orderType": "BUY",
   "orderStyle": "MARKET",
   "quantity": 10,
-  "price": 175.00  // Required only for LIMIT orders
+  "price": 175.0 // Required only for LIMIT orders
 }
 ```
 
 **Parameters:**
+
 - `symbol` (string, required): Stock symbol
 - `orderType` (string, required): "BUY" or "SELL"
 - `orderStyle` (string, required): "MARKET" or "LIMIT"
@@ -176,6 +195,7 @@ Place a new buy or sell order.
 - `price` (float, optional): Required for LIMIT orders
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -183,23 +203,23 @@ Place a new buy or sell order.
   "data": {
     "order": {
       "orderId": "550e8400-e29b-41d4-a716-446655440000",
-      "symbol": "AAPL",
+      "symbol": "TCS",
       "orderType": "BUY",
       "orderStyle": "MARKET",
       "quantity": 10,
       "status": "EXECUTED",
       "createdAt": "2026-01-08T10:30:00.000000",
       "executedAt": "2026-01-08T10:30:00.100000",
-      "executionPrice": 175.50
+      "executionPrice": 175.5
     },
     "trade": {
       "tradeId": "660e8400-e29b-41d4-a716-446655440001",
       "orderId": "550e8400-e29b-41d4-a716-446655440000",
-      "symbol": "AAPL",
+      "symbol": "TCS",
       "orderType": "BUY",
       "quantity": 10,
-      "price": 175.50,
-      "totalValue": 1755.00,
+      "price": 175.5,
+      "totalValue": 1755.0,
       "executedAt": "2026-01-08T10:30:00.100000"
     }
   }
@@ -209,24 +229,26 @@ Place a new buy or sell order.
 ---
 
 #### 4. Get Order Status
+
 **GET** `/orders/{orderId}`
 
 Fetch status of a specific order.
 
 **Response:**
+
 ```json
 {
   "success": true,
   "data": {
     "orderId": "550e8400-e29b-41d4-a716-446655440000",
-    "symbol": "AAPL",
+    "symbol": "TCS",
     "orderType": "BUY",
     "orderStyle": "MARKET",
     "quantity": 10,
     "status": "EXECUTED",
     "createdAt": "2026-01-08T10:30:00.000000",
     "executedAt": "2026-01-08T10:30:00.100000",
-    "executionPrice": 175.50
+    "executionPrice": 175.5
   }
 }
 ```
@@ -234,18 +256,20 @@ Fetch status of a specific order.
 ---
 
 #### 5. Get All Orders
+
 **GET** `/orders`
 
 Fetch list of all orders.
 
 **Response:**
+
 ```json
 {
   "success": true,
   "data": [
     {
       "orderId": "550e8400-e29b-41d4-a716-446655440000",
-      "symbol": "AAPL",
+      "symbol": "TCS",
       "status": "EXECUTED",
       ...
     }
@@ -257,11 +281,13 @@ Fetch list of all orders.
 ---
 
 #### 6. Get All Trades
+
 **GET** `/trades`
 
 Fetch list of all executed trades.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -269,11 +295,11 @@ Fetch list of all executed trades.
     {
       "tradeId": "660e8400-e29b-41d4-a716-446655440001",
       "orderId": "550e8400-e29b-41d4-a716-446655440000",
-      "symbol": "AAPL",
+      "symbol": "TCS",
       "orderType": "BUY",
       "quantity": 10,
-      "price": 175.50,
-      "totalValue": 1755.00,
+      "price": 175.5,
+      "totalValue": 1755.0,
       "executedAt": "2026-01-08T10:30:00.100000"
     }
   ],
@@ -284,31 +310,33 @@ Fetch list of all executed trades.
 ---
 
 #### 7. Get Portfolio
+
 **GET** `/portfolio`
 
 Fetch current portfolio holdings with profit/loss.
 
 **Response:**
+
 ```json
 {
   "success": true,
   "data": {
     "holdings": [
       {
-        "symbol": "AAPL",
+        "symbol": "TCS",
         "quantity": 10,
-        "averagePrice": 175.50,
-        "currentPrice": 175.50,
-        "currentValue": 1755.00,
-        "profitLoss": 0.00,
-        "profitLossPercent": 0.00
+        "averagePrice": 175.5,
+        "currentPrice": 175.5,
+        "currentValue": 1755.0,
+        "profitLoss": 0.0,
+        "profitLossPercent": 0.0
       }
     ],
     "summary": {
-      "totalValue": 1755.00,
-      "totalInvested": 1755.00,
-      "totalProfitLoss": 0.00,
-      "totalProfitLossPercent": 0.00
+      "totalValue": 1755.0,
+      "totalInvested": 1755.0,
+      "totalProfitLoss": 0.0,
+      "totalProfitLossPercent": 0.0
     }
   },
   "count": 1
@@ -322,16 +350,18 @@ Fetch current portfolio holdings with profit/loss.
 ### Using curl
 
 #### 1. View All Instruments
+
 ```bash
 curl -X GET http://localhost:5000/api/v1/instruments
 ```
 
 #### 2. Place a Market Buy Order
+
 ```bash
 curl -X POST http://localhost:5000/api/v1/orders \
   -H "Content-Type: application/json" \
   -d '{
-    "symbol": "AAPL",
+    "symbol": "TCS",
     "orderType": "BUY",
     "orderStyle": "MARKET",
     "quantity": 10
@@ -339,11 +369,12 @@ curl -X POST http://localhost:5000/api/v1/orders \
 ```
 
 #### 3. Place a Limit Buy Order
+
 ```bash
 curl -X POST http://localhost:5000/api/v1/orders \
   -H "Content-Type: application/json" \
   -d '{
-    "symbol": "GOOGL",
+    "symbol": "TCS",
     "orderType": "BUY",
     "orderStyle": "LIMIT",
     "quantity": 5,
@@ -352,11 +383,12 @@ curl -X POST http://localhost:5000/api/v1/orders \
 ```
 
 #### 4. Place a Sell Order
+
 ```bash
 curl -X POST http://localhost:5000/api/v1/orders \
   -H "Content-Type: application/json" \
   -d '{
-    "symbol": "AAPL",
+    "symbol": "TCS",
     "orderType": "SELL",
     "orderStyle": "MARKET",
     "quantity": 5
@@ -364,17 +396,20 @@ curl -X POST http://localhost:5000/api/v1/orders \
 ```
 
 #### 5. Get Order Status
+
 ```bash
 # Replace {orderId} with actual order ID from previous response
 curl -X GET http://localhost:5000/api/v1/orders/{orderId}
 ```
 
 #### 6. View All Trades
+
 ```bash
 curl -X GET http://localhost:5000/api/v1/trades
 ```
 
 #### 7. View Portfolio
+
 ```bash
 curl -X GET http://localhost:5000/api/v1/portfolio
 ```
@@ -388,6 +423,7 @@ python test_trading_system.py
 ```
 
 This will:
+
 1. Check server health
 2. Fetch all instruments
 3. Place multiple orders (buy and sell)
@@ -401,44 +437,52 @@ This will:
 ## 🔍 Assumptions
 
 ### 1. **Single User System**
-   - The system is designed for a single user
-   - No authentication or user management required
-   - All data belongs to one default user
+
+- The system is designed for a single user
+- No authentication or user management required
+- All data belongs to one default user
 
 ### 2. **Instant Order Execution**
-   - All orders are executed immediately upon placement
-   - No order queue or pending state
-   - Orders move from NEW → PLACED → EXECUTED instantly
+
+- All orders are executed immediately upon placement
+- No order queue or pending state
+- Orders move from NEW → PLACED → EXECUTED instantly
 
 ### 3. **Market Simulation**
-   - Stock prices are static (no real-time price updates)
-   - MARKET orders execute at the last traded price
-   - LIMIT orders execute at the specified limit price (always successful)
+
+- Stock prices are static (no real-time price updates)
+- MARKET orders execute at the last traded price
+- LIMIT orders execute at the specified limit price (always successful)
 
 ### 4. **In-Memory Storage**
-   - All data is stored in memory
-   - Data is lost when the server restarts
-   - Suitable for development/testing purposes
+
+- All data is stored in memory
+- Data is lost when the server restarts
+- Suitable for development/testing purposes
 
 ### 5. **Portfolio Management**
-   - Average price is calculated using weighted average method
-   - Selling shares reduces portfolio quantity
-   - Portfolio entries are removed when quantity reaches zero
+
+- Average price is calculated using weighted average method
+- Selling shares reduces portfolio quantity
+- Portfolio entries are removed when quantity reaches zero
 
 ### 6. **Order Validation**
-   - Quantity must be a positive integer
-   - Price is mandatory for LIMIT orders
-   - Symbol must exist in the instruments list
-   - No check for sufficient balance or portfolio quantity for sells
+
+- Quantity must be a positive integer
+- Price is mandatory for LIMIT orders
+- Symbol must exist in the instruments list
+- No check for sufficient balance or portfolio quantity for sells
 
 ### 7. **Trading Hours**
-   - No restriction on trading hours
-   - Orders can be placed 24/7
+
+- No restriction on trading hours
+- Orders can be placed 24/7
 
 ### 8. **Data Constraints**
-   - Order IDs and Trade IDs are UUID v4
-   - Timestamps use ISO 8601 format
-   - Prices are stored as floats with 2 decimal precision for display
+
+- Order IDs and Trade IDs are UUID v4
+- Timestamps use ISO 8601 format
+- Prices are stored as floats with 2 decimal precision for display
 
 ---
 
@@ -501,13 +545,14 @@ All errors follow a consistent format:
 {
   "success": false,
   "error": "Error message here",
-  "errors": ["List of validation errors"]  // For validation failures
+  "errors": ["List of validation errors"] // For validation failures
 }
 ```
 
 ### Validation Examples
 
 #### Invalid Quantity
+
 ```json
 {
   "success": false,
@@ -516,6 +561,7 @@ All errors follow a consistent format:
 ```
 
 #### Missing Price for LIMIT Order
+
 ```json
 {
   "success": false,
@@ -524,6 +570,7 @@ All errors follow a consistent format:
 ```
 
 #### Invalid Symbol
+
 ```json
 {
   "success": false,
@@ -532,6 +579,7 @@ All errors follow a consistent format:
 ```
 
 #### Order Not Found
+
 ```json
 {
   "success": false,
@@ -556,6 +604,7 @@ python test_trading_system.py
 ```
 
 The test script covers:
+
 - ✅ Health check
 - ✅ Fetching instruments
 - ✅ Placing MARKET orders
