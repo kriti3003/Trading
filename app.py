@@ -10,9 +10,7 @@ import uuid
 
 app = Flask(__name__)
 
-# ======================================================
 # ENUMS
-# ======================================================
 
 class OrderType(str, Enum):
     BUY = "BUY"
@@ -29,16 +27,14 @@ class OrderStatus(str, Enum):
     CANCELLED = "CANCELLED"
 
 
-# ======================================================
 # IN-MEMORY DATA
-# ======================================================
 
 INSTRUMENTS = [
-    {"symbol": "AAPL", "exchange": "NASDAQ", "instrumentType": "STOCK", "lastTradedPrice": 175.50},
-    {"symbol": "GOOGL", "exchange": "NASDAQ", "instrumentType": "STOCK", "lastTradedPrice": 140.25},
-    {"symbol": "MSFT", "exchange": "NASDAQ", "instrumentType": "STOCK", "lastTradedPrice": 380.00},
-    {"symbol": "TSLA", "exchange": "NASDAQ", "instrumentType": "STOCK", "lastTradedPrice": 245.75},
-    {"symbol": "AMZN", "exchange": "NASDAQ", "instrumentType": "STOCK", "lastTradedPrice": 155.30},
+    {"symbol": "RELIANCE", "exchange": "NSE", "instrumentType": "STOCK", "lastTradedPrice": 175.50},
+    {"symbol": "TCS", "exchange": "NSE", "instrumentType": "STOCK", "lastTradedPrice": 140.25},
+    {"symbol": "LT", "exchange": "NSE", "instrumentType": "STOCK", "lastTradedPrice": 380.00},
+    {"symbol": "BAJFINANCE", "exchange": "NSE", "instrumentType": "STOCK", "lastTradedPrice": 245.75},
+    {"symbol": "HINDUNILVR", "exchange": "NSE", "instrumentType": "STOCK", "lastTradedPrice": 155.30},
 ]
 
 ORDERS = {}

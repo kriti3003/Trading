@@ -2,21 +2,6 @@
 
 A simplified stock trading platform backend that simulates core trading workflows including order placement, portfolio management, and trade execution.
 
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Setup Instructions](#setup-instructions)
-- [API Documentation](#api-documentation)
-- [Sample API Usage](#sample-api-usage)
-- [Assumptions](#assumptions)
-- [Project Structure](#project-structure)
-- [Error Handling](#error-handling)
-- [Testing](#testing)
-
----
-
 ## 🎯 Overview
 
 This project implements a wrapper SDK around REST APIs for a trading platform. It allows users to view instruments, place orders, check order status, view trades, and manage their portfolio - all without real market connectivity.
@@ -165,7 +150,6 @@ Fetch list of all tradable instruments.
   "count": 5
 }
 ```
-
 ---
 
 #### 3. Place Order
@@ -611,55 +595,3 @@ For production deployment, consider:
 8. **Docker**: Containerize the application
 
 ---
-
-## 📝 Future Enhancements
-
-- [ ] Add user authentication and authorization
-- [ ] Implement order cancellation functionality
-- [ ] Add order modification (price/quantity changes)
-- [ ] Implement order expiry (Good Till Cancelled, Day orders)
-- [ ] Add market data streaming
-- [ ] Implement stop-loss and take-profit orders
-- [ ] Add transaction history with filtering
-- [ ] Implement margin trading
-- [ ] Add real-time notifications (WebSocket)
-- [ ] Implement risk management checks
-
----
-
-## 👨‍💻 Developer Notes
-
-### Key Design Decisions
-
-1. **RESTful Design**: All endpoints follow REST conventions
-2. **Immediate Execution**: Orders execute instantly for simplicity
-3. **Comprehensive Validation**: Input validation before processing
-4. **Atomic Operations**: Portfolio updates happen with trades
-5. **Consistent Response Format**: All responses follow the same structure
-
-### Trading Concepts Implemented
-
-- **Order Lifecycle**: NEW → PLACED → EXECUTED
-- **Order Types**: Market vs Limit orders
-- **Portfolio Tracking**: Average cost calculation
-- **P&L Calculation**: Real-time profit/loss tracking
-- **Trade Matching**: Instant execution simulation
-
----
-
-## 📞 Support
-
-For questions or issues:
-1. Check the API documentation above
-2. Review the test script for usage examples
-3. Examine error messages for validation issues
-
----
-
-## 📄 License
-
-This project is created for educational purposes as part of a technical assessment.
-
----
-
-**Built with ❤️ using Flask and Python**
