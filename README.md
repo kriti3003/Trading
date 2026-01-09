@@ -1,8 +1,8 @@
-# Trading System Wrapper SDK
+# Trading System
 
 A simplified stock trading platform backend that simulates core trading workflows including order placement, portfolio management, and trade execution.
 
-## 🎯 Overview
+## Overview
 
 This project implements a wrapper SDK around REST APIs for a trading platform. It allows users to view instruments, place orders, check order status, view trades, and manage their portfolio - all without real market connectivity.
 
@@ -589,58 +589,34 @@ All errors follow a consistent format:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Manual Testing with curl
 
-Test each endpoint individually using the curl commands provided in the [Sample API Usage](#sample-api-usage) section.
+Test each endpoint individually using the curl commands.
 
 ### Automated Testing
 
 Run the complete test suite:
+once app.py is running split terminal and install required packages using code below
+(create virtual env if not created before)
 
 ```bash
+pip install requests flask
 python test_trading_system.py
 ```
-
-The test script covers:
-
-- ✅ Health check
-- ✅ Fetching instruments
-- ✅ Placing MARKET orders
-- ✅ Placing LIMIT orders
-- ✅ Placing SELL orders
-- ✅ Input validation (negative quantity, missing price)
-- ✅ Order status retrieval
-- ✅ Trade history
-- ✅ Portfolio management
 
 ### Expected Test Flow
 
 1. Server health verification
 2. Fetch available instruments (5 stocks)
-3. Place BUY orders for AAPL (10 shares)
-4. Place LIMIT order for GOOGL (5 shares)
-5. Place additional orders for MSFT and TSLA
-6. Place SELL order for AAPL (5 shares)
+3. Place BUY orders for LT (10 shares)
+4. Place LIMIT order for LT (5 shares)
+5. Place additional orders for LT and TCS
+6. Place SELL order for LT (5 shares)
 7. Test validation failures
 8. Verify order status
 9. Check trade history
 10. View final portfolio with P&L
-
----
-
-## 🚀 Running in Production
-
-For production deployment, consider:
-
-1. **Database**: Replace in-memory storage with PostgreSQL/MySQL
-2. **Authentication**: Add JWT-based authentication
-3. **Rate Limiting**: Implement API rate limiting
-4. **Logging**: Add comprehensive logging
-5. **Configuration**: Use environment variables
-6. **WSGI Server**: Use Gunicorn or uWSGI instead of Flask dev server
-7. **Reverse Proxy**: Deploy behind Nginx
-8. **Docker**: Containerize the application
 
 ---

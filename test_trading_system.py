@@ -83,7 +83,7 @@ def test_place_order(symbol, order_type, style, quantity, price=None):
 def test_invalid_order():
     divider("Invalid Order - Negative Quantity")
     payload = {
-        "symbol": "AAPL",
+        "symbol": "LT",
         "orderType": "BUY",
         "orderStyle": "MARKET",
         "quantity": -10
@@ -96,7 +96,7 @@ def test_invalid_order():
 def test_limit_without_price():
     divider("Invalid Order - LIMIT without Price")
     payload = {
-        "symbol": "AAPL",
+        "symbol": "LT",
         "orderType": "BUY",
         "orderStyle": "LIMIT",
         "quantity": 5
@@ -153,20 +153,20 @@ def run_tests():
     time.sleep(0.4)
 
     # BUY Orders
-    buy_order_id = test_place_order("AAPL", "BUY", "MARKET", 10)
+    buy_order_id = test_place_order("LT", "BUY", "BAJFINANCE", 10)
     time.sleep(0.4)
 
-    limit_order_id = test_place_order("GOOGL", "BUY", "LIMIT", 5, price=140.00)
+    limit_order_id = test_place_order("LT", "BUY", "BAJFINANCE", 5, price=140.00)
     time.sleep(0.4)
 
     # Additional buys
     print("\n--- Adding Portfolio Diversity ---")
-    for symbol in ["MSFT", "TSLA"]:
+    for symbol in ["LT", "BAJFINANCE"]:
         test_place_order(symbol, "BUY", "MARKET", 3)
         time.sleep(0.3)
 
     # SELL Order
-    sell_order_id = test_place_order("AAPL", "SELL", "MARKET", 5)
+    sell_order_id = test_place_order("BAJFINANCE", "SELL", "MARKET", 5)
     time.sleep(0.4)
 
     # Validation tests
