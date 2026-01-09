@@ -476,13 +476,7 @@ This will:
 ### 7. **Trading Hours**
 
 - No restriction on trading hours
-- Orders can be placed 24/7
-
-### 8. **Data Constraints**
-
-- Order IDs and Trade IDs are UUID v4
-- Timestamps use ISO 8601 format
-- Prices are stored as floats with 2 decimal precision for display
+- Orders can be placed 24/7 (Stipulation of real stock market)
 
 ---
 
